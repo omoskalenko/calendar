@@ -120,14 +120,14 @@ export default class CalendarView {
       className: 'table is-bordered'
     }, this.tableHead, this.tableBody)
 
-    this.table.addEventListener('click', ({ target }) => {
+    // this.table.addEventListener('click', ({ target }) => {
       
-      if( target.tagName !== 'TD') return false;
-      this.onDateSelect();
-      target.classList.add('has-background-primary');
-      target.classList.add('has-text-white'); 
+    //   if( target.tagName !== 'TD') return false;
+    //   this.onDateSelect();
+    //   target.classList.add('has-background-primary');
+    //   target.classList.add('has-text-white'); 
       
-    })
+    // })
 
   }
 
