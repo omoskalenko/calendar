@@ -15,6 +15,13 @@ export default class Calendar {
     return this.today.getDate();
   }
 
+  isToday(year, month, day) {
+    if(year !== this.currentYear) return false;
+    if(month !== this.currentMonth) return false;
+    if(day !== this.currentDay) return false;
+    return true;
+  }
+
   static isLeapYear(year) {
     return !( ( year % 4 ) || ( !( year % 100 ) && ( year % 400 ) ) );
   }
@@ -51,9 +58,15 @@ export default class Calendar {
 
       for (let j = 0; j < Calendar.DAYS_IN_WEEK; j++) {
         if( ( i === 0 && j < monthStartsOn ) || day > daysInMonth ) {
-          data[i][j] = undefined;
+          data[i][j] = {};
         } else {
-          data[i][j] = day++;
+          data[i][j] = {
+            year,
+            month,
+            day,
+            isToday: this.isToday(year, month, day)
+          };
+          day++
         }
         
       }

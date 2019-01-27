@@ -11,6 +11,7 @@ table {
     table-layout: fixed;
     width: 100%;
     max-width: 640px;
+    border-collapse: separate;
 }
 
 td:hover {

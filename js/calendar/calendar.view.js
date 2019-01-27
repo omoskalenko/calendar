@@ -2,10 +2,10 @@ import createElement from '../dom.js'
 import Calendar from '.././calendar/calendar.js'
 
 export default class CalendarView {
-  constructor(calendar, rootElement) {
+  constructor(calendar, rootElement, onDateSelect = Function.prototype) {
     this.calendar = calendar;
     this.rootElement = rootElement;
-
+    this.onDateSelect = onDateSelect;
     this.yearSelect = null;
     this.monthSelect = null;
     this.prevMonthButton = null;
@@ -76,7 +76,6 @@ export default class CalendarView {
     this._update();
   }
 
-
   _init() {
 
     this.monthSelect = createElement('select', {
@@ -121,6 +120,14 @@ export default class CalendarView {
       className: 'table is-bordered'
     }, this.tableHead, this.tableBody)
 
+    this.table.addEventListener('click', ({ target }) => {
+      
+      if( target.tagName !== 'TD') return false;
+      this.onDateSelect();
+      target.classList.add('has-background-primary');
+      target.classList.add('has-text-white'); 
+      
+    })
 
   }
 
@@ -145,9 +152,9 @@ export default class CalendarView {
   }
 
   _update() {
-
     const month = this.calendar.getMonthDate(this.year, this.month);
 
+    
     const tableBody = createElement(
       'tbody',
       null,
@@ -155,7 +162,11 @@ export default class CalendarView {
         week => createElement(
           'tr',
           null,
-          week.map(date => createElement('td', null, date))
+          week.map(date => {
+            return createElement('td', {
+              className: date.isToday ? 'has-background-primary has-text-white' : undefined
+            }, date.day)
+          })
         )
       )
     );
