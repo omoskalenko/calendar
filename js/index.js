@@ -1,8 +1,7 @@
 /* eslint-disable no-useless-catch */
-import Calendar from 'js/calendar.js'
-import CalendarView from 'js/calendar.view.js'
-import { createElement } from 'dom.js'
-
+import Calendar from './calendar/calendar.js'
+import CalendarView from './calendar/calendar.view.js'
 
 const calendar = new Calendar();
-const view = new CalendarView();
+// eslint-disable-next-line no-unused-vars
+const view = new CalendarView(calendar, document.querySelector('#root'));
