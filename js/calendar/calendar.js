@@ -1,24 +1,98 @@
 export default class Calendar {
   constructor() {
-    
+    this.today = new Date();
+  }
+
+  get currentYear() {
+    return this.today.getFullYear();
+  }
+
+  get currentMonth() {
+    return this.today.getMonth();
+  }
+
+  get currentDay() {
+    return this.today.getDate();
+  }
+
+  static isLeapYear(year) {
+    return !( ( year % 4 ) || ( !( year % 100 ) && ( year % 400 ) ) );
   }
 
   static getDaysInMonth(year, month) {
 
+    const isLeapYear = Calendar.isLeapYear(year);
+
+    if ( month === Calendar.MONTHS.FEB && isLeapYear) return  Calendar.DAYS_IN_MONTH[month] + 1;
+
+    return Calendar.DAYS_IN_MONTH[month];
+  }
+
+  static getDayOfWeek( year, month, day ) {
+    switch ( new Date(year, month, day).getDay() ) {
+      case 0: return 6;
+      case 1: return 0;
+      case 2: return 1;
+      case 3: return 2;
+      case 4: return 3;
+      case 5: return 4;
+      case 6: return 5;
+    }
   }
 
   getMonthDate(year, month) {
-    const daysInMonth = Calendar.getDaysInMonth(year, month);
+    const daysInMonth = Calendar.getDaysInMonth( year, month );
+    const monthStartsOn = Calendar.getDayOfWeek( year, month, 1 );
+    const data = [];
+    let day = 1;
 
-    return [
-      [undefined, undefined, 1, 2, 3, 4, 5],
-      [6, 7, 8, 9, 10, 11, 12],
-      [13, 14, 15, 16, 17, 18, 19],
-      [20, 21, 22, 23, 24, 25, 26],
-      [27, 28, 29, 30, undefined, undefined]
-    ];
+    for (let i = 0; i < ( ( daysInMonth + monthStartsOn ) / Calendar.DAYS_IN_WEEK ); i++) {
+      data[i] = [];
+
+      for (let j = 0; j < Calendar.DAYS_IN_WEEK; j++) {
+        if( ( i === 0 && j < monthStartsOn ) || day > daysInMonth ) {
+          data[i][j] = undefined;
+        } else {
+          data[i][j] = day++;
+        }
+        
+      }
+    }
+
+    return data;
   }
 
 }
+Calendar.DAYS_IN_WEEK = 7;
 
-Calendar.DAYS_IN_MONTH
+Calendar.MONTHS = {
+  JAN: 0,
+  FEB: 1,
+  MAR: 2,
+  APR: 3,
+  MAY: 4,
+  JUN: 5,
+  JUL: 6,
+  AUG: 7,
+  SEP: 8,
+  OCT: 9,
+  NOV: 10,
+  DEC: 11
+};
+
+Calendar.MONTH_NAMES = [
+  'Январь',
+  'Феварль',
+  'Март',
+  'Апрель',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Август',
+  'Сентябрь',
+  'Октябрь',
+  'Ноябрь',
+  'Декабрь',
+];
+
+Calendar.DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

@@ -1,4 +1,5 @@
 import createElement from '../dom.js'
+import Calendar from '.././calendar/calendar.js'
 
 export default class CalendarView {
   constructor(calendar, rootElement) {
@@ -29,7 +30,15 @@ export default class CalendarView {
   }
 
   get month() {
-    return Number(this.monthSelect.value);
+    return Number(this.monthSelect.value );
+  }
+
+  set year(year) {
+    this.yearSelect.value = year;
+  }
+
+  set month(month) {
+   this.monthSelect.value = month;
   }
 
   handleMonthSelectChange() {
@@ -41,10 +50,29 @@ export default class CalendarView {
   }
 
   handlePrevMonthButtonClick() {
+    let month = Number(this.monthSelect.value) - 1
+
+    if(month === -1) {
+      month = 11
+      this.year = this.year - 1
+    }
+    
+    this.month = month;
+
     this._update();
   }
 
   handleNextMonthButtonClick() {
+
+    let month = Number(this.monthSelect.value) + 1
+
+    if(month === 12) {
+      month = 0
+      this.year = this.year + 1
+    }
+    this.month = month;
+    
+
     this._update();
   }
 
@@ -55,9 +83,9 @@ export default class CalendarView {
         onchange: this.handleMonthSelectChange
       },
 
-      //  Calendar.MONTH_NAMES
-      ["Январь", "Февраль", "Март"].map((name, index) => createElement('option', {
+      Calendar.MONTH_NAMES.map((name, index) => createElement('option', {
         value: index,
+        selected: index === this.calendar.currentMonth
       }, name))
 
     );
@@ -68,8 +96,9 @@ export default class CalendarView {
 
       //  Calendar.MONTH_NAMES
       [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020].map(
-        (year, index) => createElement('option', {
-          value: index,
+        year => createElement('option', {
+          value: year,
+          selected: year === this.calendar.currentYear
         }, year))
     );
 
@@ -116,6 +145,7 @@ export default class CalendarView {
   }
 
   _update() {
+
     const month = this.calendar.getMonthDate(this.year, this.month);
 
     const tableBody = createElement(
